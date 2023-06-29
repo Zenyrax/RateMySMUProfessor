@@ -1,5 +1,5 @@
 # RateMySMUProfessor
-This chrome extension integrates Rate My Professor into Southern Methodist Univeristy's course search pages. An option will appear to load a professor's rating when one expands a course description.
+This chrome extension integrates Rate My Professor into Southern Methodist University's course search pages. An option will appear to load a professor's rating when one expands a course description.
 
 Feel free to look around. It's not the cleanest work I've done, but it works. 
 
