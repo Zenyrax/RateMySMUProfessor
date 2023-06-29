@@ -70,12 +70,12 @@ function handleResponse(res, query) {
   // console.log(query)
   let button = document.getElementById(query.id)
   let parent = button.parentNode
-  if (!res) {
+  if (res == "error") {
     return button.innerText = "Error getting rating :("
-  } else if (!res.data.search.teachers.edges.length || res.data.search.teachers.edges[0].node.school.id != "U2Nob29sLTkyNw==") {
+  } else if (res == "no_results") {
     return parent.innerHTML = `<br>No results were found. <a href="https://www.ratemyprofessors.com/search/professors/927" target="_blank">Click here to search manually.</a>`
   }
-  const data = res.data.search.teachers.edges[0].node;
+  const data = res.data.node;
   // console.log(data)
   parent.innerHTML = `<a href="https://www.ratemyprofessors.com/professor/${data.legacyId}" target="_blank">${data.firstName} ${data.lastName} - ${data.department}</a>`
   parent.innerHTML += `<br>Rating: ${data.avgRating}/5`
