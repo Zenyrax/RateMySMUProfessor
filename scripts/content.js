@@ -73,8 +73,8 @@ function getRating(e) {
 }
 
 function handleResponse(res, query) {
-  console.log(res)
-  console.log(query)
+  // console.log(res)
+  // console.log(query)
   let button = document.getElementById(query.id)
   let parent = button.parentNode
   tasks[query.id]--
