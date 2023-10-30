@@ -45,13 +45,13 @@ setInterval(() => {
           // console.log(line.querySelector("div"))
           line.setAttribute("x-seen", "true")
           let new_element = line.cloneNode(true);
-          let new_element2 = line.previousSibling.cloneNode(true);
           let uuid = crypto.randomUUID()
           new_element.innerHTML = `<button type="button" id="${uuid}" x-name="${line.innerText}">Get Instructor Rating</button>`
           new_element.classList.add("MuiTypography-body1");
-          new_element2.innerHTML = ``
+          new_element.classList.remove("MuiGrid-grid-xs-8");
+          new_element.classList.add("MuiGrid-grid-xs-12");
           var curRow = line.parentNode;
-          curRow.insertBefore(new_element2, line.nextSibling);
+          // console.log(new_element);
           curRow.insertBefore(new_element, line.nextSibling);
           document.getElementById(uuid).addEventListener('click', getRating, false);
         }
@@ -82,16 +82,27 @@ function handleResponse(res, query) {
     button.innerText = "Get Instructor Rating"
     button.addEventListener('click', getRating, false);
   }
-  if (res == "error") {
+  if (res.status == "error") {
     var template = document.createElement('template');
     template.innerHTML = `<div><br>There was an error getting results for ${query.name}. <a href="https://www.ratemyprofessors.com/search/professors/927" target="_blank">Click here to search manually.</a></div>`;
     return parent.append(template.content.firstChild)
-  } else if (res == "no_results") {
+  } else if (res.status == "no_results") {
     var template = document.createElement('template');
-    template.innerHTML = `<div><br>No results were found for ${query.name}. <a href="https://www.ratemyprofessors.com/search/professors/927" target="_blank">Click here to search manually.</a></div>`;
+    template.innerHTML = `<div><br>No results for ${query.name}. <a href="https://www.ratemyprofessors.com/search/professors/927" target="_blank">Click here to search manually.</a></div>`;
+    return parent.append(template.content.firstChild)
+  } else if (res.status == "fallback") {
+    var template = document.createElement('template');
+    var templateContent = `<div><br>No results for ${query.name}, but here's other possible results.`;
+    for (let i = 0; i < res.profs.length && i < 5; i++) {
+      // console.log(res.profs[i])
+      templateContent += `<br><a href="https://www.ratemyprofessors.com/professor/${res.profs[i].node.legacyId}" target="_blank"> • ${res.profs[i].node.firstName} ${res.profs[i].node.lastName} - ${res.profs[i].node.department} - ${res.profs[i].node.school.name}</a>`
+    }
+    templateContent += `</div>`;
+    template.innerHTML = templateContent;
+    // console.log(template)
     return parent.append(template.content.firstChild)
   }
-  const data = res.data.node;
+  const data = res.data.data.node;
   // console.log(data)
   var template = document.createElement('template');
   template.innerHTML = `<div><br><a href="https://www.ratemyprofessors.com/professor/${data.legacyId}" target="_blank">${data.firstName} ${data.lastName} - ${data.department}</a><br>Rating: ${data.avgRating}/5<br>Difficulty: ${data.avgDifficulty}/5<br>Would Take Again: ${Math.round(data.wouldTakeAgainPercent)}%<br>Ratings: ${data.numRatings}</div>`

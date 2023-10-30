@@ -17,12 +17,12 @@ chrome.runtime.onMessage.addListener(
     }).then(res => {
       // console.log(res)
       if (res.ok) {
-        let json = res.json().then((json => queryProf(callback, json))).catch(e => callback("error"))
+        let json = res.json().then((json => queryProf(callback, json))).catch(e => callback({status:"no_results"}))
       } else {
-        callback("error")
+        callback({status:"no_results"})
       }
     }).catch(e => {
-      callback("error")
+      callback({status:"no_results"})
       // console.log(e)
     })
     return true
@@ -30,8 +30,11 @@ chrome.runtime.onMessage.addListener(
 );
 
 function queryProf(callback, json) {
-  if (!json.data.search.teachers.edges.length || json.data.search.teachers.edges[0].node.school.id != "U2Nob29sLTkyNw==") {
-    callback("no_results")
+  // console.log(json)
+  if (!json.data.search.teachers.edges.length) {
+    callback({status:"no_results"})
+  } else if (json.data.search.teachers.didFallback) {
+    callback({status:"fallback", profs: json.data.search.teachers.edges})
   }
   fetch("https://www.ratemyprofessors.com/graphql", {
     "headers": {
@@ -48,12 +51,12 @@ function queryProf(callback, json) {
   }).then(res => {
     // console.log(res)
     if (res.ok) {
-      let json = res.json().then((json => callback(json))).catch(e => callback("error"))
+      let json = res.json().then((json => callback({status:"success", data: json}))).catch(e => callback({status:"no_results"}))
     } else {
-      callback("error")
+      callback({status:"no_results"})
     }
   }).catch(e => {
-    callback("error")
+    callback({status:"no_results"})
     // console.log(e)
   })
 }
