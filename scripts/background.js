@@ -17,12 +17,12 @@ chrome.runtime.onMessage.addListener(
     }).then(res => {
       // console.log(res)
       if (res.ok) {
-        let json = res.json().then((json => queryProf(callback, json))).catch(e => callback({status:"no_results"}))
+        let json = res.json().then((json => queryProf(callback, json))).catch(e => callback({status:"error", message: "Parsing error"}))
       } else {
-        callback({status:"no_results"})
+        callback({status:"error", message: res.statusText})
       }
     }).catch(e => {
-      callback({status:"no_results"})
+      callback({status:"error", message:"Request Failed"})
       // console.log(e)
     })
     return true
@@ -51,12 +51,12 @@ function queryProf(callback, json) {
   }).then(res => {
     // console.log(res)
     if (res.ok) {
-      let json = res.json().then((json => callback({status:"success", data: json}))).catch(e => callback({status:"no_results"}))
+      let json = res.json().then((json => callback({status:"success", data: json}))).catch(e => callback({status:"error", message:"Parsing error"}))
     } else {
-      callback({status:"no_results"})
+      callback({status:"error", message:res.statusText})
     }
   }).catch(e => {
-    callback({status:"no_results"})
+    callback({status:"error", message:"Request Failed"})
     // console.log(e)
   })
 }

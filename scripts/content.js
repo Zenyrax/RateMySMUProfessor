@@ -84,7 +84,7 @@ function handleResponse(res, query) {
   }
   if (res.status == "error") {
     var template = document.createElement('template');
-    template.innerHTML = `<div><br>There was an error getting results for ${query.name}. <a href="https://www.ratemyprofessors.com/search/professors/927" target="_blank">Click here to search manually.</a></div>`;
+    template.innerHTML = `<div><br>There was an error getting results for ${query.name}. (${res.message}) Please try again or <a href="https://www.ratemyprofessors.com/search/professors/927" target="_blank">click here to search manually.</a></div>`;
     return parent.append(template.content.firstChild)
   } else if (res.status == "no_results") {
     var template = document.createElement('template');

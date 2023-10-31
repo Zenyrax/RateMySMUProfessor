@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Rate My SMU Professor",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Adds professor ratings to Southern Methodist University's course search pages.",
   "icons": {
     "48": "images/icon48.png",
